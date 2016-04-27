@@ -22,6 +22,19 @@ namespace RouterProtocol.Graph
             return false;
         }
 
+        public bool RemoveNode(Node removedNode)
+        {
+            Node temp = _nodes.FirstOrDefault(s => s.ID == removedNode.ID);
+            if(temp != null)
+            {
+                foreach(var neighbour in temp.GetNeighbours())
+                    neighbour.NeighborNode.RemoveNeighbor(temp);
+                _nodes.Remove(temp);
+                return true;
+            }
+            return false;
+        }
+
         public Node[] GetGraphNodes()
         {
             return _nodes.ToArray();

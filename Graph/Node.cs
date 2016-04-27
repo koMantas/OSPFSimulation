@@ -9,36 +9,50 @@ namespace RouterProtocol.Graph
     public class Node
     {
         private static int numOfNodes = 0;
-        public Dictionary<int, Node> Vertexes { get; private set; }
-        public int ID{ get; private set; }
+        public int ID { get; private set; }
         public string Info { get; private set; }
+        public List<Neighbor> Neighbors { get; private set; }
 
         public Node(string info)
         {
             Info = info;
             ID = numOfNodes++;
-            Vertexes = new Dictionary<int, Node>();
+            Neighbors = new List<Neighbor>();
+            this.AddNewNeighbor(this, 0);
         }
 
 
-        public bool AddNewVertex(Node newVertex)
+        public bool AddNewNeighbor(Node newNeighbor, int costMetric)
         {
-            if (Vertexes.ContainsKey(newVertex.ID))
+            if (Neighbors.FirstOrDefault(s => s.NeighborNode.ID == newNeighbor.ID) != null)
             {
-                Vertexes.Add(newVertex.ID, newVertex);
+                newNeighbor.AddNewNeighbor(this, costMetric);
+                Neighbors.Add(new Neighbor(newNeighbor, costMetric));
                 return true;
             }
             return false;
         }
 
-        public bool RemoveVertex(int removedVertexId)
+        public bool RemoveNeighbor(Node removedNeighbor)
         {
-            if (Vertexes.ContainsKey(removedVertexId))
+            Neighbor temp = Neighbors.FirstOrDefault(s => s.NeighborNode.ID == removedNeighbor.ID);
+            if (temp != null)
             {
-                Vertexes.Remove(removedVertexId);
+                removedNeighbor.RemoveNeighbor(this);
+                Neighbors.Remove(temp);
                 return true;
             }
             return false;
+        }
+
+        public Neighbor[] GetNeighbours()
+        {
+            return Neighbors.ToArray();
+        }
+
+        public int[] GetNeighboursIDs()
+        {
+            return Neighbors.Select(s => s.NeighborNode.ID).ToArray();
         }
     }
 }

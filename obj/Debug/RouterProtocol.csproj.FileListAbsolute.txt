@@ -1,1 +1,6 @@
 D:\Dropbox\Projects\Network\RouterProtocol\RouterProtocol\bin\Debug\RouterProtocol.exe.config
+D:\Dropbox\Projects\Network\RouterProtocol\RouterProtocol\bin\Debug\RouterProtocol.exe
+D:\Dropbox\Projects\Network\RouterProtocol\RouterProtocol\bin\Debug\RouterProtocol.pdb
+D:\Dropbox\Projects\Network\RouterProtocol\RouterProtocol\obj\Debug\RouterProtocol.csprojResolveAssemblyReference.cache
+D:\Dropbox\Projects\Network\RouterProtocol\RouterProtocol\obj\Debug\RouterProtocol.exe
+D:\Dropbox\Projects\Network\RouterProtocol\RouterProtocol\obj\Debug\RouterProtocol.pdb
