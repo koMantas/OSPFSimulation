@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RouterProtocol.GraphStructure;
 
 namespace RouterProtocol
 {
@@ -10,6 +11,32 @@ namespace RouterProtocol
     {
         static void Main(string[] args)
         {
+            //Test
+            Node A = new Node("A");
+            Node B = new Node("B");
+            Node C = new Node("C");
+            Node D = new Node("D");
+            A.AddNewNeighbor(B, 3);
+            A.AddNewNeighbor(C, 6);
+            B.AddNewNeighbor(C, 1);
+            B.AddNewNeighbor(D, 6);
+            C.AddNewNeighbor(D, 1);
+            //List<Node> nodes = new List<Node>();
+            //nodes.Add(A);
+            //nodes.Add(B);
+            //nodes.Add(C);
+            //nodes.Add(D);
+            Graph graph = new Graph();
+            graph.AddNode(A);
+            graph.AddNode(B);
+            graph.AddNode(C);
+            graph.AddNode(D);
+
+            var paths = DijkstraAlgorithm.FindShortestPath(graph, A);
+            foreach(var key in paths.Keys)
+            {
+                Console.WriteLine("Node: " + key.Info + " distance: " + paths[key]);
+            }
         }
     }
 }
