@@ -11,11 +11,12 @@ namespace RouterProtocol
     {
 
         //source is the starting point from which algorithm calculates all paths to other nodes
-        public static Dictionary<Node,int> FindShortestPath(Graph graph, Node source)
+        public static Dictionary<Node, int> FindShortestPath(Graph graph, Node source)
         {
             List<Node> nodes = new List<Node>();
             Dictionary<Node, int> distance = new Dictionary<Node, int>();
             source.RoutingTable = new Dictionary<Node, PreviousPathNode>();
+            source.RoutingTable.Add(source, new PreviousPathNode(source,0));
             foreach (var node in graph.GetGraphNodes())
             {
                 distance.Add(node, int.MaxValue);
@@ -26,10 +27,10 @@ namespace RouterProtocol
 
             while (nodes.Count != 0)
             {
-                Node temp = GetNearestNode(nodes.ToArray(),distance);
+                Node temp = GetNearestNode(nodes.ToArray(), distance);
                 nodes.Remove(temp);
 
-                foreach(var neighbour in temp.GetNeighbours())
+                foreach (var neighbour in temp.GetNeighbours())
                 {
                     int tempDistance = distance[temp] + neighbour.CostMetric;
                     if (tempDistance < distance[neighbour.NeighborNode])
@@ -37,7 +38,7 @@ namespace RouterProtocol
                         //shortest path is found
                         distance[neighbour.NeighborNode] = tempDistance;
                         //Previous node to destination node
-                        source.RoutingTable[neighbour.NeighborNode] = new PreviousPathNode(temp,neighbour.CostMetric); 
+                        source.RoutingTable[neighbour.NeighborNode] = new PreviousPathNode(temp, neighbour.CostMetric);
                     }
                 }
             }
