@@ -16,11 +16,14 @@ namespace RouterProtocol
             Node B = new Node("B");
             Node C = new Node("C");
             Node D = new Node("D");
+            Node E = new Node("E");
             A.AddNewNeighbor(B, 3);
             A.AddNewNeighbor(C, 6);
             B.AddNewNeighbor(C, 1);
             B.AddNewNeighbor(D, 6);
             C.AddNewNeighbor(D, 1);
+            A.AddNewNeighbor(E, 7);
+            C.AddNewNeighbor(E, 1);
             //List<Node> nodes = new List<Node>();
             //nodes.Add(A);
             //nodes.Add(B);
@@ -31,6 +34,7 @@ namespace RouterProtocol
             graph.AddNode(B);
             graph.AddNode(C);
             graph.AddNode(D);
+            graph.AddNode(E);
 
             var paths = DijkstraAlgorithm.FindShortestPath(graph, A);
             foreach(var key in paths.Keys)

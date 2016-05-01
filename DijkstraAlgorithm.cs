@@ -43,7 +43,7 @@ namespace RouterProtocol
 
             foreach(var item in prev.Keys)
             {
-                Console.WriteLine("To: "+ item.Info + " previous:"+prev[item].Info);
+                Console.WriteLine(prev[item].Info+"->"+item.Info);
             }
 
             return distance;

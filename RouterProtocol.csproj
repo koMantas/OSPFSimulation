@@ -46,6 +46,7 @@
     <Compile Include="DijkstraAlgorithm.cs" />
     <Compile Include="GraphStructure\Graph.cs" />
     <Compile Include="GraphStructure\Node.cs" />
+    <Compile Include="GraphStructure\PreviousPathNode.cs" />
     <Compile Include="GraphStructure\Vertex.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -12,6 +12,7 @@ namespace RouterProtocol.GraphStructure
         public int ID { get; private set; }
         public string Info { get; private set; }
         public List<Neighbor> Neighbors { get; private set; }
+        public Dictionary<Node, PreviousPathNode> RoutingTable { get; set;} //key is destination node, value is previous node(+ costMetric) to destination
 
         public Node(string info)
         {
