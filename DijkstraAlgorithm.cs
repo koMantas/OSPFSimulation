@@ -15,7 +15,7 @@ namespace RouterProtocol
         {
             List<Node> nodes = new List<Node>();
             Dictionary<Node, int> distance = new Dictionary<Node, int>();
-            Dictionary<Node, Node> prev = new Dictionary<Node, Node>();
+            source.RoutingTable = new Dictionary<Node, PreviousPathNode>();
             foreach (var node in graph.GetGraphNodes())
             {
                 distance.Add(node, int.MaxValue);
@@ -36,39 +36,13 @@ namespace RouterProtocol
                     {
                         //shortest path is found
                         distance[neighbour.NeighborNode] = tempDistance;
-                        prev[neighbour.NeighborNode] = temp; 
+                        //Previous node to destination node
+                        source.RoutingTable[neighbour.NeighborNode] = new PreviousPathNode(temp,neighbour.CostMetric); 
                     }
                 }
             }
 
-            foreach(var item in prev.Keys)
-            {
-                Console.WriteLine(prev[item].Info+"->"+item.Info);
-            }
-
             return distance;
-
-
-
-            //foreach(var node in distance.Keys.ToArray())
-            //{
-            //    Node nearestNode = GetNearestNode(distance, isFinalized);
-
-            //    isFinalized[nearestNode] = true;
-
-            //    foreach (var neighbour in nearestNode.GetNeighbours())
-            //    {
-            //        var neighbourNode = neighbour.NeighborNode;
-            //        var neighbourDistance = neighbour.CostMetric;
-
-                    
-            //    }
-
-            //}
-            
-
-
-
         }
 
         private static Node GetNearestNode(Node[] nodes, Dictionary<Node, int> distance)
@@ -86,19 +60,5 @@ namespace RouterProtocol
             return minimumDistanceNode;
         }
 
-        private static Node GetNearestNode(Dictionary<Node, int> distance, Dictionary<Node, bool> isFinalized)
-        {
-            Node minimumDistanceNode = null;
-            int minDistance = int.MaxValue;
-            foreach(var node in distance.Keys.ToArray())
-            {
-                if(isFinalized[node] == false && distance[node]<= minDistance)
-                {
-                    minDistance = distance[node];
-                    minimumDistanceNode = node;
-                }
-            }
-            return minimumDistanceNode;
-        }
     }
 }
