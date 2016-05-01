@@ -17,14 +17,27 @@ namespace RouterProtocol
             CalculateAllRoutersRoutingTable();
         }
 
-        public bool AddNewRouter(Node newRouter)
+        public Node[] AddNewRouter(Node newRouter)
         {
-            return RoutersGraph.AddNode(newRouter);
+            List<Node> updatedNodes = new List<Node>();
+            if (RoutersGraph.AddNode(newRouter))
+            {
+                UpdateRoutersRoutingTable(updatedNodes,newRouter);
+                return updatedNodes.ToArray();
+            }
+            return null;
+
         }
 
-        public bool RemoveRouter(Node removedRouter)
+        public Node[] RemoveRouter(Node removedRouter)
         {
-            return RoutersGraph.RemoveNode(removedRouter);
+            List<Node> updatedNodes = new List<Node>();
+            if (RoutersGraph.RemoveNode(removedRouter))
+            {
+                UpdateRoutersRoutingTable(updatedNodes, removedRouter);
+                return updatedNodes.ToArray();
+            }
+            return null;
         }
 
         public List<PathRouter> FindShortestPath(Node source, Node destination)
@@ -32,13 +45,15 @@ namespace RouterProtocol
             List<PathRouter> path = new List<PathRouter>();
             Dictionary<Node, PreviousPathNode> routingTable = source.RoutingTable;
             PreviousPathNode tempNode = routingTable[destination];
-            path.Insert(0, new PathRouter(tempNode.PathNode, tempNode.CostMetric));
+            Node previousNode = destination;
+            path.Insert(0, new PathRouter(previousNode, tempNode.CostMetric));
             if (tempNode != null)
             {
                 while (tempNode.PathNode != source)
                 {
-                    tempNode = routingTable[tempNode.PathNode];
-                    path.Insert(0, new PathRouter(tempNode.PathNode, tempNode.CostMetric));
+                    previousNode = tempNode.PathNode;
+                    tempNode = routingTable[previousNode];
+                    path.Insert(0, new PathRouter(previousNode, tempNode.CostMetric));
                 }
 
                 return path;
@@ -48,12 +63,24 @@ namespace RouterProtocol
 
         private void CalculateAllRoutersRoutingTable()
         {
-            foreach(var router in RoutersGraph.GetGraphNodes())
+            foreach (var router in RoutersGraph.GetGraphNodes())
             {
                 DijkstraAlgorithm.FindShortestPath(RoutersGraph, router);
             }
         }
 
+        private void UpdateRoutersRoutingTable(List<Node> updatedNodes, Node addOrRemovedRouter)
+        {
+            foreach (var item in addOrRemovedRouter.GetNeighbours())
+            {
+                if (!updatedNodes.Contains(item.NeighborNode))
+                {
+                    updatedNodes.Add(item.NeighborNode);
+                    DijkstraAlgorithm.FindShortestPath(RoutersGraph, item.NeighborNode);
+                    UpdateRoutersRoutingTable(updatedNodes, item.NeighborNode);
+                }
+            }
+        }
 
     }
 }

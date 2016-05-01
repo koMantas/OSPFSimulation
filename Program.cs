@@ -36,10 +36,23 @@ namespace RouterProtocol
             graph.AddNode(D);
             graph.AddNode(E);
 
-            var paths = DijkstraAlgorithm.FindShortestPath(graph, A);
-            foreach(var key in paths.Keys)
+            //var paths = DijkstraAlgorithm.FindShortestPath(graph, A);
+            //foreach(var key in paths.Keys)
+            //{
+            //    Console.WriteLine("Node: " + key.Info + " distance: " + paths[key]);
+            //}
+
+            var ospf = new OSPF(graph);
+            foreach (var pathSteps in ospf.FindShortestPath(A, A))
             {
-                Console.WriteLine("Node: " + key.Info + " distance: " + paths[key]);
+                Console.WriteLine("Router's name: "+ pathSteps.Router.Info + " cost metric: "+pathSteps.CostMetric);
+            }
+
+            Console.WriteLine("****************************************");
+
+            foreach (var pathSteps in ospf.FindShortestPath(A, D))
+            {
+                Console.WriteLine("Router's name: " + pathSteps.Router.Info + " cost metric: " + pathSteps.CostMetric);
             }
         }
     }
