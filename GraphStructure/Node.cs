@@ -23,22 +23,20 @@ namespace RouterProtocol.GraphStructure
         }
 
 
-        public bool AddNeighbor(Node newNeighbor, int costMetric)
+        private bool AddNeighbor(Node newNeighbor, int costMetric)
         {
             if (Neighbors.FirstOrDefault(s => s.NeighborNode.ID == newNeighbor.ID) == null)
             {
-
-                //newNeighbor.AddNewNeighbor(this, costMetric);
                 Neighbors.Add(new Neighbor(newNeighbor, costMetric));
                 return true;
             }
             return false;
         }
 
-        public bool AddNewNeighbor(Node neighbor, int costMestric)
+        public bool AddNewNeighbor(Node neighbor, int costMetric)
         {
-            bool result = this.AddNeighbor(neighbor, costMestric);
-            result = neighbor.AddNeighbor(this, costMestric);
+            bool result = this.AddNeighbor(neighbor, costMetric);
+            result = neighbor.AddNeighbor(this, costMetric);
             return result;
 
         }

@@ -9,7 +9,7 @@ namespace RouterProtocol
 {
     public class OSPF
     {
-        private Graph RoutersGraph { get; set; }
+        public Graph RoutersGraph { get; set; }
 
         public OSPF(Graph routersGraph)
         {
@@ -22,7 +22,7 @@ namespace RouterProtocol
             List<Node> updatedNodes = new List<Node>();
             if (RoutersGraph.AddNode(newRouter))
             {
-                UpdateRoutersRoutingTable(updatedNodes,newRouter);
+                UpdateRoutersRoutingTable(updatedNodes, newRouter);
                 return updatedNodes.ToArray();
             }
             return null;
@@ -44,19 +44,22 @@ namespace RouterProtocol
         {
             List<PathRouter> path = new List<PathRouter>();
             Dictionary<Node, PreviousPathNode> routingTable = source.RoutingTable;
-            PreviousPathNode tempNode = routingTable[destination];
-            Node previousNode = destination;
-            path.Insert(0, new PathRouter(previousNode, tempNode.CostMetric));
-            if (tempNode != null)
+            if (routingTable.Keys.FirstOrDefault(s => s == destination) != null)
             {
-                while (tempNode.PathNode != source)
+                PreviousPathNode tempNode = routingTable[destination];
+                Node previousNode = destination;
+                path.Insert(0, new PathRouter(previousNode, tempNode.CostMetric));
+                if (tempNode != null)
                 {
-                    previousNode = tempNode.PathNode;
-                    tempNode = routingTable[previousNode];
-                    path.Insert(0, new PathRouter(previousNode, tempNode.CostMetric));
-                }
+                    while (tempNode.PathNode != source)
+                    {
+                        previousNode = tempNode.PathNode;
+                        tempNode = routingTable[previousNode];
+                        path.Insert(0, new PathRouter(previousNode, tempNode.CostMetric));
+                    }
 
-                return path;
+                    return path;
+                }
             }
             return null;
         }
@@ -73,7 +76,7 @@ namespace RouterProtocol
         {
             foreach (var item in addOrRemovedRouter.GetNeighbours())
             {
-                if (!updatedNodes.Contains(item.NeighborNode))
+                if (!updatedNodes.Contains(item.NeighborNode) && item.NeighborNode != addOrRemovedRouter)
                 {
                     updatedNodes.Add(item.NeighborNode);
                     DijkstraAlgorithm.FindShortestPath(RoutersGraph, item.NeighborNode);

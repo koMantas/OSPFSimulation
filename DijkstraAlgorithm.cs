@@ -16,7 +16,7 @@ namespace RouterProtocol
             List<Node> nodes = new List<Node>();
             Dictionary<Node, int> distance = new Dictionary<Node, int>();
             source.RoutingTable = new Dictionary<Node, PreviousPathNode>();
-            source.RoutingTable.Add(source, new PreviousPathNode(source,0));
+            source.RoutingTable.Add(source, new PreviousPathNode(source, 0));
             foreach (var node in graph.GetGraphNodes())
             {
                 distance.Add(node, int.MaxValue);
