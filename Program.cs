@@ -24,6 +24,7 @@ namespace RouterProtocol
             R1.AddNewNeighbor(R3, 2);
             R1.AddNewNeighbor(R5, 2);
             R2.AddNewNeighbor(R4, 10);
+            R2.AddNewNeighbor(R5, 3);
             R4.AddNewNeighbor(R5, 5);
             R4.AddNewNeighbor(R6, 3);
             R5.AddNewNeighbor(R6, 20);
@@ -46,8 +47,9 @@ namespace RouterProtocol
                 Console.WriteLine("Menu:\n" +
                     "1-See the routers' neighbours\n" +
                     "2-Send packed from A to B\n" +
-                    "3-Add new router\n" +
-                    "4-Remove router\n" +
+                    "3-See the shortest path from A to B\n"+
+                    "4-Add new router\n" +
+                    "5-Remove router\n" +
                     "0-exit");
                 switch (ParseSelection(Console.ReadLine()))
                 {
@@ -70,8 +72,14 @@ namespace RouterProtocol
                         Node source = GetRoutersObjectFromString(Console.ReadLine(),graph);
                         Console.Write("Insert destination router's name: ");
                         Node destination = GetRoutersObjectFromString(Console.ReadLine(),graph);
-
-                        var path = ospf.FindShortestPath(source, destination);
+                        Task.Run(()=>ospf.SendPacket("Hello, it's me", source, destination));
+                        break;
+                    case (3):
+                        Console.Write("Insert source router's name: ");
+                        Node pathSource = GetRoutersObjectFromString(Console.ReadLine(), graph);
+                        Console.Write("Insert destination router's name: ");
+                        Node pathDestination = GetRoutersObjectFromString(Console.ReadLine(), graph);
+                        var path = ospf.FindShortestPath(pathSource, pathDestination);
                         if (path != null)
                         {
                             foreach (var pathSteps in path)
@@ -84,7 +92,7 @@ namespace RouterProtocol
                             Console.WriteLine("Cannot find path from source to destination");
                         }
                         break;
-                    case (3):
+                    case (4):
                         Console.Write("Insert new router's name: ");
                         string name = Console.ReadLine();
                         Node newRouter = new Node(name);
@@ -110,7 +118,7 @@ namespace RouterProtocol
                         } while (true);
                         ospf.AddNewRouter(newRouter);
                         break;
-                    case (4):
+                    case (5):
                         Console.Write("Insert removed router's name: ");
                         Node removed = GetRoutersObjectFromString(Console.ReadLine(), graph);
                         ospf.RemoveRouter(removed);

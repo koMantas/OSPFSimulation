@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RouterProtocol.GraphStructure;
+using System.Threading;
 
 namespace RouterProtocol
 {
@@ -62,6 +63,42 @@ namespace RouterProtocol
                 }
             }
             return null;
+        }
+
+        public void SendPacket(string packet, Node source, Node destination)
+        {
+            List<PathRouter> path = FindShortestPath(source, destination);
+            Node currentRouter = source;
+            int timeout = 0;
+            while (currentRouter != destination)
+            {
+                if (path != null)
+                {
+                    Thread.Sleep(10000);
+                    if (currentRouter.GetNeighbours().FirstOrDefault(s => s.NeighborNode == path[0].Router) != null)
+                    {
+                        Console.WriteLine("Packet \"" + packet + "\" is in router " + path[0].Router.Info + " and cost metric to router is " + path[0].CostMetric);
+                        currentRouter = path[0].Router;
+                        path = FindShortestPath(currentRouter, destination);
+                        timeout = 0;
+                    }
+                    else
+                    {
+                        timeout++;
+                        if (timeout == 3)
+                        {
+                            Console.Write("Cannot reach router " + currentRouter.Info);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Cannot send packet to " + destination);
+                    break;
+                }
+            }
+            Console.WriteLine("Packet \"" + packet + "\" reached destination");
         }
 
         private void CalculateAllRoutersRoutingTable()
