@@ -74,7 +74,7 @@ namespace RouterProtocol
             {
                 if (path != null)
                 {
-                    Thread.Sleep(10000);
+                    Thread.Sleep(15000);
                     if (currentRouter.GetNeighbours().FirstOrDefault(s => s.NeighborNode == path[0].Router) != null)
                     {
                         Console.WriteLine("Packet \"" + packet + "\" is in router " + path[0].Router.Info + " and cost metric to router is " + path[0].CostMetric);
@@ -87,8 +87,8 @@ namespace RouterProtocol
                         timeout++;
                         if (timeout == 3)
                         {
-                            Console.Write("Cannot reach router " + currentRouter.Info);
-                            break;
+                            Console.WriteLine("Packet \"" + packet + "\" Cannot reach router " + path[0].Router.Info);
+                            return;
                         }
                     }
                 }
