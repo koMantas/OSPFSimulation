@@ -56,7 +56,14 @@ namespace RouterProtocol
                     {
                         previousNode = tempNode.PathNode;
                         tempNode = routingTable[previousNode];
-                        path.Insert(0, new PathRouter(previousNode, tempNode.CostMetric));
+                        if (path.FirstOrDefault(s => s.Router == previousNode) == null)
+                        {
+                            return null;
+                        }
+                        else
+                        {
+                            path.Insert(0, new PathRouter(previousNode, tempNode.CostMetric));
+                        }
                     }
 
                     return path;
@@ -74,7 +81,7 @@ namespace RouterProtocol
             {
                 if (path != null)
                 {
-                    Thread.Sleep(15000);
+                    Thread.Sleep(5000);
                     if (currentRouter.GetNeighbours().FirstOrDefault(s => s.NeighborNode == path[0].Router) != null)
                     {
                         Console.WriteLine("Packet \"" + packet + "\" is in router " + path[0].Router.Info + " and cost metric to router is " + path[0].CostMetric);
